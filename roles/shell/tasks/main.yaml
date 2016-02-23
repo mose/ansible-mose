@@ -1,0 +1,18 @@
+---
+- name: install oh-my-zsh
+  git: accept_hostkey=yes
+       depth=1
+       repo=https://github.com/robbyrussell/oh-my-zsh.git
+       dest=~/.oh-my-zsh
+
+- name: setup oh-my-zsh
+  template: src=zshrc.j2
+            dest=~/.zshrc
+
+- name: add mose theme to oh-my-zsh
+  copy: src=mose.zsh-theme
+        dest=~/.oh-my-zsh/themes/mose.zsh-theme
+
+- name: add mosepower theme to oh-my-zsh
+  copy: src=mosepower.zsh-theme
+        dest=~/.oh-my-zsh/themes/mosepower.zsh-theme

@@ -1,0 +1,62 @@
+# run using --ask-become-pass
+---
+- hosts: bootstrap
+  become: yes
+  become_method: su
+  become_user: root
+  gather_facts: no
+  tasks:
+
+    - name: bootstrap pkg tool
+      raw: /usr/sbin/pkg -N
+      register: pkg
+      ignore_errors: True
+
+    - raw: /usr/bin/env ASSUME_ALWAYS_YES=1 /usr/sbin/pkg bootstrap -f
+      when: pkg|failed
+
+    - name: install python
+      raw: /usr/sbin/pkg install -y python
+
+    - name: run inventory
+      setup:
+
+    - name: create ansible user if missing
+      user: name=ansible password=* createhome=yes system=yes state=present uid=998
+
+    - name: enable key-based ssh access for ansible user
+      authorized_key: user=ansible
+                      key="{{ item }}"
+      with_file:
+        - ~/.ssh/id_rsa.pub
+        - ~/.ssh/gandi_key.pub
+
+    - name: install sudo
+      pkgng: name=sudo state=present
+
+    - name: allow wheel and ansible to sudo
+      copy:
+        content: "# ansible managed\n%wheel ALL=(ALL) NOPASSWD: ALL\n%ansible ALL=(ALL) NOPASSWD: ALL\n"
+        dest: /usr/local/etc/sudoers.d/ansible
+        validate: 'visudo -cf %s'
+
+    - name: install mosh
+      pkgng: name=net/mosh state=present
+
+    - name: disable sshd root login
+      lineinfile:
+        destfile: /etc/ssh/sshd_config
+        regexp: '^PermitRootLogin'
+        line: 'PermitRootLogin no'
+        state: present
+        insertafter: '^#PermitRootLogin'
+        validate: '/usr/sbin/sshd -T -f %s'
+      notify:
+      - restart sshd
+
+    - name: run inventory
+      setup:
+
+  handlers:
+    - name: restart sshd
+      service: name=sshd state=restarted

@@ -1,0 +1,29 @@
+localweb        ansible_ssh_host=192.168.33.10
+localdb         ansible_ssh_host=192.168.33.20
+mose-sandbosc   ansible_ssh_host=msb
+
+# ---------------------------------------
+[bootstrap-freebsd]
+mose-sandbosc
+
+[freebsd]
+mose-sandbosc
+
+[freebsd:vars]
+ansible_python_interpreter=/usr/local/bin/python
+
+# ----------------------------------------
+# local dev
+# ----------------------------------------
+
+[vgr]
+localweb
+localdb
+
+[debian]
+localweb
+localdb
+
+[vgr:vars]
+ansible_ssh_user=vagrant
+ansible_ssh_pass=vagrant
