@@ -5,7 +5,7 @@ This is a collection of personal playbooks for private usage on my servers.
 
 License
 -------------
-The files in this repositoiry are usable under the MIT license.
+The files in this repository are usable under the terms of the MIT license.
 
 Copyright
 ------------
