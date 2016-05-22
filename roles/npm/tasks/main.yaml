@@ -1,0 +1,12 @@
+---
+- name: Install npm
+  pkgng: name=npm
+
+- name: Install gulp
+  shell: npm install -g gulp
+
+- name: Trick gulp
+  shell: chmod 777 /root/.babel.json
+
+- name: Install slackin
+  shell: npm install -g slackin
