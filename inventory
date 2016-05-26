@@ -1,13 +1,16 @@
 localweb        ansible_ssh_host=192.168.33.10
 localdb         ansible_ssh_host=192.168.33.20
 mose-sandbosc   ansible_ssh_host=msb
+fbsd103         ansible_ssh_host=fbsd103
 
 # ---------------------------------------
 [bootstrap-freebsd]
 mose-sandbosc
+fbsd103
 
 [freebsd]
 mose-sandbosc
+fbsd103
 
 [freebsd:vars]
 ansible_python_interpreter=/usr/local/bin/python
